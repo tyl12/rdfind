@@ -177,11 +177,12 @@ parseOptions(Parser& parser)
         o.usesha256 = true;
       } else if (parser.parsed_string_is("sha512")) {
         o.usesha512 = true;
-      } else {
-        std::cerr << "expected md5/sha1/sha256/sha512, not \""
-                  << parser.get_parsed_string() << "\"\n";
-        std::exit(EXIT_FAILURE);
       }
+    //   else {
+    //     std::cerr << "expected md5/sha1/sha256/sha512, not \""
+    //               << parser.get_parsed_string() << "\"\n";
+    //     std::exit(EXIT_FAILURE);
+    //   }
     } else if (parser.try_parse_string("-sleep")) {
       const auto nextarg = std::string(parser.get_parsed_string());
       if (nextarg == "1ms") {
@@ -357,7 +358,9 @@ main(int narg, const char* argv[])
   std::vector<std::pair<Fileinfo::readtobuffermode, const char*>> modes{
     { Fileinfo::readtobuffermode::NOT_DEFINED, "" },
     { Fileinfo::readtobuffermode::READ_FIRST_BYTES, "first bytes" },
-    { Fileinfo::readtobuffermode::READ_LAST_BYTES, "last bytes" },
+    { Fileinfo::readtobuffermode::READ_MID1_BYTES, "mid1 bytes" },
+    { Fileinfo::readtobuffermode::READ_MID2_BYTES, "mid1 bytes" },
+     { Fileinfo::readtobuffermode::READ_LAST_BYTES, "last bytes" },
   };
   if (o.usemd5) {
     modes.emplace_back(Fileinfo::readtobuffermode::CREATE_MD5_CHECKSUM,
@@ -387,6 +390,12 @@ main(int narg, const char* argv[])
     std::cout << "removed " << gswd.removeUniqSizeAndBuffer()
               << " files from list. ";
     std::cout << filelist.size() << " files left." << std::endl;
+
+    if (it->first == Fileinfo::readtobuffermode::READ_LAST_BYTES){
+        for (const auto f : filelist){
+            std::cout<< f.size() << " | " << f.name() << std::endl;
+        }
+    }
   }
 
   // What is left now is a list of duplicates, ordered on size.

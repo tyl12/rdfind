@@ -44,7 +44,9 @@ public:
     NOT_DEFINED = -1,
     READ_FIRST_BYTES = 0,
     READ_LAST_BYTES = 1,
-    CREATE_MD5_CHECKSUM = 2,
+    READ_MID1_BYTES = 2,
+    READ_MID2_BYTES = 3,
+    CREATE_MD5_CHECKSUM = 4,
     CREATE_SHA1_CHECKSUM,
     CREATE_SHA256_CHECKSUM,
     CREATE_SHA512_CHECKSUM,
@@ -198,7 +200,7 @@ private:
    */
   std::int64_t m_identity;
 
-  static const int SomeByteSize = 64;
+  static const int SomeByteSize = 1024*4;
 
   /// a buffer that will be filled with some bytes of the file or a hash
   std::array<char, SomeByteSize> m_somebytes;

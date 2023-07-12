@@ -22,6 +22,16 @@
 #include "Fileinfo.hh"
 #include "UndoableUnlink.hh"
 
+long fileSize( const char* filePath ){
+    std::streampos fsize = 0;
+    std::ifstream file( filePath, std::ios::binary );
+    fsize = file.tellg();
+    file.seekg( 0, std::ios::end );
+    fsize = file.tellg() - fsize;
+    file.close();
+    return fsize;
+}
+
 int
 Fileinfo::fillwithbytes(enum readtobuffermode filltype,
                         enum readtobuffermode lasttype)
@@ -48,6 +58,8 @@ Fileinfo::fillwithbytes(enum readtobuffermode filltype,
     return -1;
   }
 
+  const auto len = fileSize(m_filename.c_str());
+
   auto checksumtype = Checksum::checksumtypes::NOTSET;
   // read some bytes
   switch (filltype) {
@@ -58,6 +70,15 @@ Fileinfo::fillwithbytes(enum readtobuffermode filltype,
     case readtobuffermode::READ_LAST_BYTES:
       // read at end of file
       f1.seekg(-SomeByteSize, std::ios_base::end);
+      f1.read(m_somebytes.data(), SomeByteSize);
+      break;
+    case readtobuffermode::READ_MID1_BYTES:
+      f1.seekg(len*1/3, std::ios_base::beg);
+      f1.read(m_somebytes.data(), SomeByteSize);
+      break;
+    case readtobuffermode::READ_MID2_BYTES:
+      // read at end of file
+      f1.seekg(len*2/3, std::ios_base::beg);
       f1.read(m_somebytes.data(), SomeByteSize);
       break;
     case readtobuffermode::CREATE_MD5_CHECKSUM:
