@@ -241,9 +241,9 @@ parseOptions(Parser& parser)
   // done with parsing of options. remaining arguments are files and dirs.
 
   // decide what checksum to use - if no checksum is set, force sha1!
-  if (!o.usemd5 && !o.usesha1 && !o.usesha256 && !o.usesha512) {
-    o.usesha1 = true;
-  }
+//   if (!o.usemd5 && !o.usesha1 && !o.usesha256 && !o.usesha512) {
+//     o.usesha1 = true;
+//   }
   return o;
 }
 
